@@ -7,7 +7,7 @@
 	"authors": [
 		"breenihilation"
 	],
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/silentfilms/icon.png",
 	"environment": "*",
 	"entrypoints": {
