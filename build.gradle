@@ -1,0 +1,214 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+	maven { url = 'https://maven.maxhenkel.de/repository/public' }
+	maven { url = "https://maven.terraformersmc.com/releases/" }
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"silentfilms" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+def sherpaRuntimeVersion = '1.13.4'
+def sherpaJavaSha256 = 'c529915aa0c56213678065ad47f3d19c39564555c3a6d95bdbb79e8af82b88fe'
+def sherpaNativeSha256 = 'd351096207fd94aab14a9656edbe3a4d1ebd70777891a9dcba7495789cf33b8b'
+def sherpaJavaJar = file(".gradle/silentfilms/sherpa-onnx-v${sherpaRuntimeVersion}.jar")
+def sherpaNativeJar = file(".gradle/silentfilms/sherpa-onnx-native-win-x64-v${sherpaRuntimeVersion}.jar")
+def generatedSherpaResources = layout.buildDirectory.dir('generated/sherpaRuntimeResources')
+
+tasks.register('prepareSherpaRuntime') {
+	inputs.property 'runtimeVersion', sherpaRuntimeVersion
+	inputs.property 'javaSha256', sherpaJavaSha256
+	inputs.property 'nativeSha256', sherpaNativeSha256
+	outputs.files sherpaJavaJar, sherpaNativeJar
+	outputs.dir generatedSherpaResources
+
+	doLast {
+		def artifacts = [
+			[jar: sherpaJavaJar, name: "sherpa-onnx-v${sherpaRuntimeVersion}.jar", sha256: sherpaJavaSha256],
+			[jar: sherpaNativeJar, name: "sherpa-onnx-native-lib-win-x64-v${sherpaRuntimeVersion}.jar", sha256: sherpaNativeSha256]
+		]
+		artifacts.each { artifact ->
+			if (!artifact.jar.exists()) {
+				artifact.jar.parentFile.mkdirs()
+				def url = new URI("https://github.com/k2-fsa/sherpa-onnx/releases/download/v${sherpaRuntimeVersion}/${artifact.name}").toURL()
+				url.openStream().withCloseable { input ->
+					artifact.jar.withOutputStream { output -> output << input }
+				}
+			}
+			def digest = java.security.MessageDigest.getInstance('SHA-256')
+			def actualSha256 = digest.digest(artifact.jar.bytes).encodeHex().toString()
+			if (!actualSha256.equalsIgnoreCase(artifact.sha256)) {
+				artifact.jar.delete()
+				throw new GradleException("Downloaded ${artifact.name} failed SHA-256 verification")
+			}
+		}
+
+		def generatedRoot = generatedSherpaResources.get().asFile
+		delete generatedRoot
+		copy {
+			from zipTree(sherpaJavaJar)
+			from zipTree(sherpaNativeJar)
+			exclude 'META-INF/**'
+			into generatedRoot
+		}
+	}
+}
+
+sourceSets.client.resources.srcDir(generatedSherpaResources)
+tasks.named('processClientResources').configure {
+	dependsOn tasks.named('prepareSherpaRuntime')
+}
+tasks.named('compileClientJava').configure {
+	dependsOn tasks.named('prepareSherpaRuntime')
+}
+tasks.matching { it.name == 'sourcesJar' }.configureEach {
+	dependsOn tasks.named('prepareSherpaRuntime')
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	clientCompileOnly "com.terraformersmc:modmenu:+"
+	compileOnly "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
+	clientCompileOnly files(sherpaJavaJar)
+	testImplementation "org.junit.jupiter:junit-jupiter:5.10.3"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.10.3"
+}
+
+test {
+	useJUnitPlatform()
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}
+
+tasks.register('deployToPrisms') {
+	group = 'deployment'
+	description = 'Cleans, builds, and deploys the mod JAR to Prism Launcher instances and resets configs.'
+	dependsOn tasks.clean, tasks.build
+
+	doLast {
+		def remapTask = tasks.findByName('remapJar') ?: tasks.named('jar').get()
+		def builtJar = remapTask.archiveFile.get().asFile
+		def prismInstancesPath = providers.gradleProperty('prismInstancesDir')
+				.orElse(providers.environmentVariable('PRISM_INSTANCES_DIR'))
+				.getOrNull()
+		if (!prismInstancesPath || prismInstancesPath.isBlank()) {
+			throw new GradleException('deployToPrisms requires -PprismInstancesDir=<path> or PRISM_INSTANCES_DIR.')
+		}
+		def prismInstancesDir = file(prismInstancesPath)
+		def instanceNames = ['sfilm1', 'sfilm2']
+
+		instanceNames.each { instName ->
+			def instDir = new File(prismInstancesDir, instName)
+			if (!instDir.exists()) {
+				logger.warn("Prism instance directory not found: ${instDir.absolutePath}")
+				return
+			}
+
+			// Clean up miscreated mods folder at instance root if it exists
+			def rootModsDir = new File(instDir, "mods")
+			if (rootModsDir.exists() && rootModsDir.isDirectory()) {
+				println "Removing miscreated root mods folder in ${instName}"
+				rootModsDir.deleteDir()
+			}
+
+			def mcDir = new File(instDir, "minecraft")
+			def dotMcDir = new File(instDir, ".minecraft")
+			def targetRoot = mcDir.exists() ? mcDir : (dotMcDir.exists() ? dotMcDir : instDir)
+
+			def modsDir = new File(targetRoot, "mods")
+			def configDir = new File(targetRoot, "config")
+
+			if (!modsDir.exists()) {
+				modsDir.mkdirs()
+			}
+
+			modsDir.listFiles()?.each { file ->
+				if (file.name.startsWith("silentfilms") && file.name.endsWith(".jar")) {
+					println "Deleting old mod jar: ${file.name} from ${instName}"
+					file.delete()
+				}
+			}
+
+			println "Deploying ${builtJar.name} to ${instName} (${modsDir.absolutePath})"
+			copy {
+				from builtJar
+				into modsDir
+			}
+
+			println "Preserving Silent Films config in ${instName}"
+		}
+	}
+}
+
+tasks.build.mustRunAfter tasks.clean

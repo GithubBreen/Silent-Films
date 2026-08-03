@@ -1,0 +1,7 @@
+sherpa-onnx
+Copyright (c) 2023-2026 sherpa-onnx contributors
+
+Licensed under the Apache License, Version 2.0.
+https://github.com/k2-fsa/sherpa-onnx/blob/master/LICENSE
+
+Silent Films bundles the sherpa-onnx Java API and Windows x64 native runtime.

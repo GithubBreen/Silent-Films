@@ -1,0 +1,7 @@
+ONNX Runtime
+Copyright (c) Microsoft Corporation
+
+Licensed under the MIT License.
+https://github.com/microsoft/onnxruntime/blob/main/LICENSE
+
+Silent Films bundles the ONNX Runtime Windows x64 library through sherpa-onnx.

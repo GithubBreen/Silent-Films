@@ -1,0 +1,45 @@
+{
+  "music.main_menu.friendly_day": {"sounds": [{"name": "silentfilms:music/main_menu/friendly_day", "stream": true}]},
+  "music.main_menu.olde_timey": {"sounds": [{"name": "silentfilms:music/main_menu/olde_timey", "stream": true}]},
+
+  "music.peaceful_overworld.fig_leaf_times_two": {"sounds": [{"name": "silentfilms:music/peaceful_overworld/fig_leaf_times_two", "stream": true}]},
+  "music.peaceful_overworld.look_busy": {"sounds": [{"name": "silentfilms:music/peaceful_overworld/look_busy", "stream": true}]},
+  "music.peaceful_overworld.plucky_daisy": {"sounds": [{"name": "silentfilms:music/peaceful_overworld/plucky_daisy", "stream": true}]},
+  "music.peaceful_overworld.wagon_wheel": {"sounds": [{"name": "silentfilms:music/peaceful_overworld/wagon_wheel", "stream": true}]},
+  "music.peaceful_overworld.work_is_work_fx": {"sounds": [{"name": "silentfilms:music/peaceful_overworld/work_is_work_fx", "stream": true}]},
+
+  "music.villages_social.barroom_ballet": {"sounds": [{"name": "silentfilms:music/villages_social/barroom_ballet", "stream": true}]},
+  "music.villages_social.breaktime": {"sounds": [{"name": "silentfilms:music/villages_social/breaktime", "stream": true}]},
+  "music.villages_social.five_card_shuffle": {"sounds": [{"name": "silentfilms:music/villages_social/five_card_shuffle", "stream": true}]},
+  "music.villages_social.lively_lumpsucker": {"sounds": [{"name": "silentfilms:music/villages_social/lively_lumpsucker", "stream": true}]},
+  "music.villages_social.royal_banana": {"sounds": [{"name": "silentfilms:music/villages_social/royal_banana", "stream": true}]},
+
+  "music.travel.gold_rush": {"sounds": [{"name": "silentfilms:music/travel/gold_rush", "stream": true}]},
+  "music.travel.hand_trolley": {"sounds": [{"name": "silentfilms:music/travel/hand_trolley", "stream": true}]},
+  "music.travel.iron_horse": {"sounds": [{"name": "silentfilms:music/travel/iron_horse", "stream": true}]},
+  "music.travel.keystone_deluge": {"sounds": [{"name": "silentfilms:music/travel/keystone_deluge", "stream": true}]},
+
+  "music.caves_darkness.bad_ideas_distressed": {"sounds": [{"name": "silentfilms:music/caves_darkness/bad_ideas_distressed", "stream": true}]},
+  "music.caves_darkness.dark_hallway_distressed": {"sounds": [{"name": "silentfilms:music/caves_darkness/dark_hallway_distressed", "stream": true}]},
+  "music.caves_darkness.mister_exposition": {"sounds": [{"name": "silentfilms:music/caves_darkness/mister_exposition", "stream": true}]},
+
+  "music.danger_combat.amazing_plan_distressed": {"sounds": [{"name": "silentfilms:music/danger_combat/amazing_plan_distressed", "stream": true}]},
+  "music.danger_combat.iron_horse_distressed": {"sounds": [{"name": "silentfilms:music/danger_combat/iron_horse_distressed", "stream": true}]},
+  "music.danger_combat.the_bandit": {"sounds": [{"name": "silentfilms:music/danger_combat/the_bandit", "stream": true}]},
+  "music.danger_combat.trouble": {"sounds": [{"name": "silentfilms:music/danger_combat/trouble", "stream": true}]},
+  "music.danger_combat.villainous_treachery": {"sounds": [{"name": "silentfilms:music/danger_combat/villainous_treachery", "stream": true}]},
+  "music.danger_combat.villainous_treachery_distressed": {"sounds": [{"name": "silentfilms:music/danger_combat/villainous_treachery_distressed", "stream": true}]},
+
+  "music.comedy.amazing_plan": {"sounds": [{"name": "silentfilms:music/comedy/amazing_plan", "stream": true}]},
+  "music.comedy.comic_plodding": {"sounds": [{"name": "silentfilms:music/comedy/comic_plodding", "stream": true}]},
+  "music.comedy.fun_in_a_bottle": {"sounds": [{"name": "silentfilms:music/comedy/fun_in_a_bottle", "stream": true}]},
+  "music.comedy.hammock_fight": {"sounds": [{"name": "silentfilms:music/comedy/hammock_fight", "stream": true}]},
+  "music.comedy.hyperfun": {"sounds": [{"name": "silentfilms:music/comedy/hyperfun", "stream": true}]},
+  "music.comedy.mr_mealeys_mediocre_machine": {"sounds": [{"name": "silentfilms:music/comedy/mr_mealeys_mediocre_machine", "stream": true}]},
+
+  "music.night.batty_mcfaddin_slower": {"sounds": [{"name": "silentfilms:music/night/batty_mcfaddin_slower", "stream": true}]},
+  "music.night.fig_leaf_rag_distressed": {"sounds": [{"name": "silentfilms:music/night/fig_leaf_rag_distressed", "stream": true}]},
+  "music.night.merry_go_distressed": {"sounds": [{"name": "silentfilms:music/night/merry_go_distressed", "stream": true}]},
+  "music.night.merry_go_slower_distressed": {"sounds": [{"name": "silentfilms:music/night/merry_go_slower_distressed", "stream": true}]},
+  "music.night.waltz_of_treachery_fx": {"sounds": [{"name": "silentfilms:music/night/waltz_of_treachery_fx", "stream": true}]}
+}

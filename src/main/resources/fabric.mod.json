@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "silentfilms",
+	"version": "${version}",
+	"name": "Silent Films",
+	"description": "Turns your game into a silent film!",
+	"authors": [
+		"breenihilation"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/silentfilms/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.breenihilation.SilentFilms"
+		],
+		"client": [
+			"com.breenihilation.client.SilentFilmsClient"
+		],
+		"voicechat": [
+			"com.breenihilation.voice.SilentFilmsVoicechatPlugin"
+		],
+		"modmenu": [
+			"com.breenihilation.client.SilentFilmsModMenu"
+		]
+	},
+	"mixins": [
+		{
+			"config": "silentfilms.server.mixins.json"
+		},
+		{
+			"config": "silentfilms.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

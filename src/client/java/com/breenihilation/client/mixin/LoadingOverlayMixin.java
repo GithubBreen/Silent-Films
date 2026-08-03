@@ -1,0 +1,39 @@
+package com.breenihilation.client.mixin;
+import com.breenihilation.client.ClientTransitionController;
+import com.breenihilation.client.FilmRenderer;
+import com.breenihilation.client.SilentFilmsClient;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.LoadingOverlay;
+import net.minecraft.server.packs.resources.ReloadInstance;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(LoadingOverlay.class)
+public abstract class LoadingOverlayMixin {
+	@Shadow @Final private ReloadInstance reload;
+	@Shadow private long fadeOutStart;
+
+	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+	private void silentfilms$closeIrisBeforeFinishingReload(CallbackInfo callback) {
+		if (fadeOutStart == -1L && reload.isDone()
+				&& ClientTransitionController.delayLoadingCompletionForIris(
+						SilentFilmsClient.config())) {
+			callback.cancel();
+		}
+	}
+
+	@Inject(method = "extractRenderState", at = @At("TAIL"))
+	private void silentfilms$extractLoadingIris(
+			GuiGraphicsExtractor graphics,
+			int mouseX,
+			int mouseY,
+			float delta,
+			CallbackInfo callback
+	) {
+		FilmRenderer.extractLoadingIris(graphics);
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "com.breenihilation.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ChatListenerMixin",
+		"ClientPacketListenerMixin",
+		"GameRendererMixin",
+		"HudMixin",
+		"LoadingOverlayMixin",
+		"ScreenMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

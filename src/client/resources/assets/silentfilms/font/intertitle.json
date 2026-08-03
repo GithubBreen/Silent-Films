@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "silentfilms:silentinamovie_regular.ttf",
+      "shift": [0, 0],
+      "size": 33.0,
+      "oversample": 3.0
+    }
+  ]
+}

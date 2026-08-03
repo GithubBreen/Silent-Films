@@ -1,0 +1,8 @@
+Parakeet TDT 0.6B v3
+
+The optional speech-recognition model downloaded by Silent Films is an INT8 ONNX
+conversion of NVIDIA Parakeet TDT 0.6B v3 for sherpa-onnx.
+
+Original model: https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+ONNX conversion: https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
+Original model license: Creative Commons Attribution 4.0 International (CC BY 4.0)

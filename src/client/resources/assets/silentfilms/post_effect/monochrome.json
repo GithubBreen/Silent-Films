@@ -1,0 +1,18 @@
+{
+	"targets": {
+		"swap": {}
+	},
+	"passes": [
+		{
+			"vertex_shader": "minecraft:core/screenquad",
+			"fragment_shader": "silentfilms:post/monochrome",
+			"inputs": [
+				{
+					"sampler_name": "In",
+					"target": "minecraft:main"
+				}
+			],
+			"output": "minecraft:main"
+		}
+	]
+}
